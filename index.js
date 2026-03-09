@@ -22,14 +22,11 @@ const profileConfig = {
     "Backend Developer",
   ],
   intro:
-    "I build elegant, performant web applications that solve real problems. " +
-    "Passionate about clean code and great user experiences.",  // CHANGE: short intro paragraph
-  profileImage: "https://i.pravatar.cc/300?img=47",            // CHANGE: path or URL to your photo
+    "I am a software engineering student at Sai Gon University, specializing in backend development. I have a strong foundation in Java and C#, and I am passionate about building scalable and efficient web applications. I am eager to apply my skills in real-world projects and contribute to innovative solutions.",  // CHANGE: short intro paragraph
 
   // ---- About Section ----
   about: [
-    "Hi! I'm Jane — a software engineer with 4+ years of experience crafting modern web applications.",
-    "I love turning complex problems into simple, beautiful, and intuitive solutions.",
+    "I am a software engineering student at Sai Gon University, specializing in backend development. I have a strong foundation in Java and C#, and I am passionate about building scalable and efficient web applications. I am eager to apply my skills in real-world projects and contribute to innovative solutions.",
   ],  // CHANGE: about paragraphs (array of strings)
 
   education: [
@@ -37,8 +34,7 @@ const profileConfig = {
   ],  // CHANGE: education entries
 
   techStack: [
-    "JavaScript", "TypeScript", "React", "Node.js",
-    "Python", "PostgreSQL", "Docker", "Git",
+      "Java", "C#", "MySQL", "Git",
   ],  // CHANGE: short list of technologies for the About card
 
 
@@ -66,37 +62,19 @@ const profileConfig = {
  */
 const projects = [
   {
-    title: "TaskFlow",
+    title: "Bus Tracking System",
     description:
-      "A drag-and-drop Kanban board with real-time collaboration, built with React and Firebase.",
-    tech: ["React", "Firebase", "Tailwind"],
-    github: "https://github.com/janedoe/taskflow",
-    demo: "https://taskflow-demo.vercel.app",
+      "A web application that allows users to track the real-time location of buses, view routes, and receive notifications about bus arrivals and delays. The system includes a backend API built with Java and Spring Boot, a MySQL database for storing bus and route information, and a frontend interface developed using Next.js.",
+    tech: ["Java", "MySQL","Spring Boot","Spring Security","Next.js"],
+    github: "https://github.com/thedan85/SSB-SelfProject",
   },
   {
-    title: "DevBlog",
+    title: "Watch Store Management System",
     description:
-      "A Markdown-powered developer blog with syntax highlighting and SEO optimization.",
-    tech: ["Next.js", "MDX", "Vercel"],
-    github: "https://github.com/janedoe/devblog",
-    demo: "https://devblog-demo.vercel.app",
-  },
-  {
-    title: "Budget Tracker",
-    description:
-      "Personal finance app with charts, categories, and CSV export. Fully offline with IndexedDB.",
-    tech: ["JavaScript", "Chart.js", "IndexedDB"],
-    github: "https://github.com/janedoe/budget-tracker",
-    demo: "",
-  },
-  {
-    title: "Weather CLI",
-    description:
-      "A lightweight command-line tool that fetches weather data from OpenWeatherMap API.",
-    tech: ["Python", "Click", "REST API"],
-    github: "https://github.com/janedoe/weather-cli",
-    demo: "",
-  },
+      "A desktop application for managing inventory, sales, and customer information in a watch store. The system features a user-friendly interface built with Java and Java Swing, a SQL Server database for storing product and sales data, and functionalities for generating sales reports and managing customer orders.",
+    tech: ["Java", "SQL Server", "Java Swing"],
+    github: "https://github.com/qwqntp/Java",
+  }
 ];
 
 // ─────────────────────────────────────────────────────
