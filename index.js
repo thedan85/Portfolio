@@ -112,23 +112,6 @@ function renderPage() {
   // Nav logo
   $("#nav-logo").innerHTML = '<i class="fas fa-home"></i>';
 
-  // Nav contact buttons
-  const navContact = $("#nav-contact");
-  const navLinks = [
-    { icon: "fab fa-github", text: "GitHub", href: profileConfig.github },
-    { icon: "fas fa-envelope", text: "Email", href: "mailto:" + profileConfig.email },
-    { icon: "fab fa-linkedin", text: "LinkedIn", href: profileConfig.linkedin },
-  ];
-  navLinks.forEach((l) => {
-    const a = document.createElement("a");
-    a.className = "nav-contact-link";
-    a.href = l.href;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    a.innerHTML = '<i class="' + escapeAttr(l.icon) + '"></i> ' + escapeHtml(l.text);
-    navContact.appendChild(a);
-  });
-
   // Hero
   $("#hero-name").textContent = profileConfig.name;
   $("#hero-intro").textContent = profileConfig.intro;

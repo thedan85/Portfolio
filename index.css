@@ -132,33 +132,6 @@ ul {
   gap: 32px;
 }
 
-.nav-contact {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-  margin-right: 16px;
-}
-
-.nav-contact-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  background: var(--accent-light);
-  border: 1px solid var(--accent);
-  border-radius: 8px;
-  transition: background 0.3s, color 0.3s, transform 0.2s;
-}
-
-.nav-contact-link:hover {
-  background: var(--accent);
-  color: #fff;
-  transform: translateY(-2px);
-}
-
 .nav-link {
   font-size: 0.9rem;
   font-weight: 500;
@@ -574,10 +547,6 @@ ul {
 @media (max-width: 640px) {
   .hamburger {
     display: flex;
-  }
-
-  .nav-contact {
-    display: none;
   }
 
   .nav-menu {
