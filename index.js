@@ -34,7 +34,7 @@ const profileConfig = {
   ],  // CHANGE: education entries
 
   techStack: [
-      "Java", "C#", "MySQL", "Git",
+      "Java", "C#", ".NET", "MySQL", "Git",
   ],  // CHANGE: short list of technologies for the About card
 
 
@@ -62,18 +62,25 @@ const profileConfig = {
  */
 const projects = [
   {
+    title: "InteractHub Social Network Platform",
+    description:
+      "A full-stack social network platform built with a React and TypeScript frontend and an ASP.NET Core Web API backend backed by MySQL. It includes authentication, posts, comments, likes, shares, profiles, friends, stories, notifications, hashtag search, admin tools, and real-time updates.",
+    tech: ["C#", ".NET", "React", "TypeScript", "MySQL", "SignalR"],
+    github: "https://github.com/thedan85/Cs-SocialNetworkPlatform",
+  },
+  {
     title: "Bus Tracking System",
     description:
       "A web application that allows users to track the real-time location of buses, view routes, and receive notifications about bus arrivals and delays. The system includes a backend API built with Java and Spring Boot, a MySQL database for storing bus and route information, and a frontend interface developed using Next.js.",
     tech: ["Java", "MySQL","Spring Boot","Spring Security","Next.js"],
-    github: "https://github.com/thedan85/SSB-SelfProject",
+    github: "https://github.com/qwqntp/SSB",
   },
   {
-    title: "Watch Store Management System",
+    title: "FunnyMart",
     description:
-      "A desktop application for managing inventory, sales, and customer information in a watch store. The system features a user-friendly interface built with Java and Java Swing, a SQL Server database for storing product and sales data, and functionalities for generating sales reports and managing customer orders.",
-    tech: ["Java", "SQL Server", "Java Swing"],
-    github: "https://github.com/qwqntp/Java",
+      "A PHP and MySQL supermarket management system with a role-based dashboard, inventory workflows, sales documents, reporting, and staff management. It uses a layered architecture with controllers, services, repositories, models, and view pages for authentication, permissions, product management, invoices, payroll, and reports.",
+    tech: ["PHP", "MySQL", "HTML", "CSS", "JavaScript"],
+    github: "https://github.com/qwqntp/web2",
   }
 ];
 
@@ -94,7 +101,6 @@ function renderPage() {
   const navContact = $("#nav-contact");
   const navLinks = [
     { icon: "fab fa-github", text: "GitHub", href: profileConfig.github },
-    { icon: "fas fa-envelope", text: "Email", href: "mailto:" + profileConfig.email },
     { icon: "fab fa-linkedin", text: "LinkedIn", href: profileConfig.linkedin },
   ];
   navLinks.forEach((l) => {
@@ -154,10 +160,13 @@ function renderPage() {
       techHtml += "<span>" + escapeHtml(t) + "</span>";
     });
 
-    let linksHtml =
-      '<a href="' +
-      escapeAttr(proj.github) +
-      '" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline"><i class="fab fa-github"></i> Code</a>';
+    let linksHtml = "";
+    if (proj.github) {
+      linksHtml +=
+        '<a href="' +
+        escapeAttr(proj.github) +
+        '" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline"><i class="fab fa-github"></i> Code</a>';
+    }
     if (proj.demo) {
       linksHtml +=
         '<a href="' +
@@ -172,9 +181,8 @@ function renderPage() {
       escapeHtml(proj.description) +
       '</p><div class="project-tech">' +
       techHtml +
-      '</div><div class="project-links">' +
-      linksHtml +
-      "</div>";
+      '</div>' +
+      (linksHtml ? '<div class="project-links">' + linksHtml + "</div>" : "");
 
     grid.appendChild(card);
   });
@@ -187,7 +195,6 @@ function renderPage() {
   const footerSocials = $("#footer-socials");
   const footerLinks = [
     { icon: "fab fa-github", text: "GitHub", href: profileConfig.github },
-    { icon: "fas fa-envelope", text: "Email", href: "mailto:" + profileConfig.email },
     { icon: "fab fa-linkedin", text: "LinkedIn", href: profileConfig.linkedin },
   ];
   footerLinks.forEach((l) => {
