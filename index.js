@@ -18,6 +18,7 @@
 const profileConfig = {
   // ---- Hero Section ----
   name: "Hứa Thế Dân",                        // CHANGE: your full name
+  initials: "HTD",                          // CHANGE: monogram shown in navbar
   taglines: [                              // CHANGE: rotating tagline phrases
     "Backend Developer",
   ],
@@ -95,13 +96,13 @@ const $$ = (sel) => document.querySelectorAll(sel);
 /* ========== POPULATE PAGE FROM CONFIG ========== */
 function renderPage() {
   // Nav logo
-  $("#nav-logo").innerHTML = '<i class="fas fa-home"></i>';
+  $("#nav-logo").textContent = profileConfig.initials;
 
-  // Nav contact buttons
+  // Nav contact links
   const navContact = $("#nav-contact");
   const navLinks = [
-    { icon: "fab fa-github", text: "GitHub", href: profileConfig.github },
-    { icon: "fab fa-linkedin", text: "LinkedIn", href: profileConfig.linkedin },
+    { text: "GitHub", href: profileConfig.github },
+    { text: "LinkedIn", href: profileConfig.linkedin },
   ];
   navLinks.forEach((l) => {
     const a = document.createElement("a");
@@ -109,13 +110,18 @@ function renderPage() {
     a.href = l.href;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
-    a.innerHTML = '<i class="' + escapeAttr(l.icon) + '"></i>';
+    a.textContent = l.text;
     navContact.appendChild(a);
   });
 
   // Hero
   $("#hero-name").textContent = profileConfig.name;
+  $("#hero-role").textContent = profileConfig.taglines[0];
   $("#hero-intro").textContent = profileConfig.intro;
+  $("#hero-stack").textContent = profileConfig.techStack.join(" · ");
+  $("#hero-school").textContent =
+    profileConfig.education[0].school + " · " + profileConfig.education[0].year;
+  $("#hero-email").href = "mailto:" + profileConfig.email;
 
   // About – text
   const aboutTextEl = $("#about-text");
@@ -151,8 +157,8 @@ function renderPage() {
 
   // Projects
   const grid = $("#projects-grid");
-  projects.forEach((proj) => {
-    const card = document.createElement("div");
+  projects.forEach((proj, i) => {
+    const card = document.createElement("article");
     card.className = "project-card reveal";
 
     let techHtml = "";
@@ -165,24 +171,28 @@ function renderPage() {
       linksHtml +=
         '<a href="' +
         escapeAttr(proj.github) +
-        '" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline"><i class="fab fa-github"></i> Code</a>';
+        '" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">&#8599;</span></a>';
     }
     if (proj.demo) {
       linksHtml +=
         '<a href="' +
         escapeAttr(proj.demo) +
-        '" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary"><i class="fas fa-external-link-alt"></i> Demo</a>';
+        '" target="_blank" rel="noopener noreferrer">Live <span aria-hidden="true">&#8599;</span></a>';
     }
 
     card.innerHTML =
-      "<h3>" +
+      '<span class="project-index" aria-hidden="true">' +
+      String(i + 1).padStart(2, "0") +
+      "</span>" +
+      '<div class="project-body"><div class="project-head"><h3>' +
       escapeHtml(proj.title) +
-      '</h3><p class="project-desc">' +
+      "</h3>" +
+      (linksHtml ? '<div class="project-links">' + linksHtml + "</div>" : "") +
+      '</div><p class="project-desc">' +
       escapeHtml(proj.description) +
       '</p><div class="project-tech">' +
       techHtml +
-      '</div>' +
-      (linksHtml ? '<div class="project-links">' + linksHtml + "</div>" : "");
+      "</div></div>";
 
     grid.appendChild(card);
   });
@@ -190,80 +200,44 @@ function renderPage() {
 
   // Footer
   $("#footer-copy").textContent =
-    "\u00A9 " + new Date().getFullYear() + " " + profileConfig.name + ". All rights reserved.";
+    "\u00A9 " + new Date().getFullYear() + " " + profileConfig.name;
 
   const footerSocials = $("#footer-socials");
   const footerLinks = [
-    { icon: "fab fa-github", text: "GitHub", href: profileConfig.github },
-    { icon: "fab fa-linkedin", text: "LinkedIn", href: profileConfig.linkedin },
+    { text: "GitHub", href: profileConfig.github },
+    { text: "LinkedIn", href: profileConfig.linkedin },
+    { text: "Email", href: "mailto:" + profileConfig.email },
   ];
   footerLinks.forEach((l) => {
     const a = document.createElement("a");
-    a.className = "footer-btn";
     a.href = l.href;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    a.innerHTML = '<i class="' + escapeAttr(l.icon) + '"></i> ' + escapeHtml(l.text);
+    if (l.href.startsWith("http")) {
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+    }
+    a.innerHTML = escapeHtml(l.text) + ' <span aria-hidden="true">&#8599;</span>';
     footerSocials.appendChild(a);
   });
-}
-
-/* ========== TYPING EFFECT ========== */
-function initTypingEffect() {
-  const el = $("#typing-text");
-  const phrases = profileConfig.taglines;
-  let phraseIdx = 0;
-  let charIdx = 0;
-  let deleting = false;
-
-  function tick() {
-    const current = phrases[phraseIdx];
-    el.textContent = current.substring(0, charIdx);
-
-    if (!deleting) {
-      charIdx++;
-      if (charIdx > current.length) {
-        deleting = true;
-        setTimeout(tick, 1800);
-        return;
-      }
-    } else {
-      charIdx--;
-      if (charIdx < 0) {
-        deleting = false;
-        charIdx = 0;
-        phraseIdx = (phraseIdx + 1) % phrases.length;
-      }
-    }
-    setTimeout(tick, deleting ? 40 : 80);
-  }
-
-  tick();
 }
 
 /* ========== THEME TOGGLE ========== */
 function initTheme() {
   const btn = $("#theme-toggle");
-  const stored = localStorage.getItem("theme");
-  if (stored) document.documentElement.setAttribute("data-theme", stored);
+  const root = document.documentElement;
+
+  function sync() {
+    const dark = root.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+  }
+
+  sync();
 
   btn.addEventListener("click", () => {
-    const next =
-      document.documentElement.getAttribute("data-theme") === "dark"
-        ? "light"
-        : "dark";
-    document.documentElement.setAttribute("data-theme", next);
+    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
     localStorage.setItem("theme", next);
-    btn.innerHTML =
-      next === "dark"
-        ? '<i class="fas fa-sun"></i>'
-        : '<i class="fas fa-moon"></i>';
+    sync();
   });
-
-  // Sync icon on load
-  if (document.documentElement.getAttribute("data-theme") === "dark") {
-    btn.innerHTML = '<i class="fas fa-sun"></i>';
-  }
 }
 
 /* ========== HAMBURGER MENU ========== */
@@ -271,17 +245,29 @@ function initHamburger() {
   const btn = $("#hamburger");
   const menu = $("#nav-menu");
 
+  function setOpen(open) {
+    btn.classList.toggle("active", open);
+    menu.classList.toggle("open", open);
+    btn.setAttribute("aria-expanded", String(open));
+  }
+
   btn.addEventListener("click", () => {
-    btn.classList.toggle("active");
-    menu.classList.toggle("open");
+    setOpen(!menu.classList.contains("open"));
   });
 
-  // Close menu on link click
   $$(".nav-link").forEach((link) => {
-    link.addEventListener("click", () => {
-      btn.classList.remove("active");
-      menu.classList.remove("open");
-    });
+    link.addEventListener("click", () => setOpen(false));
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menu.classList.contains("open")) {
+      setOpen(false);
+      btn.focus();
+    }
+  });
+
+  window.matchMedia("(min-width: 721px)").addEventListener("change", (e) => {
+    if (e.matches) setOpen(false);
   });
 }
 
@@ -355,7 +341,6 @@ function escapeAttr(str) {
 /* ========== INIT ========== */
 document.addEventListener("DOMContentLoaded", () => {
   renderPage();
-  initTypingEffect();
   initTheme();
   initHamburger();
   initNavScroll();
