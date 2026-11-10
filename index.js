@@ -13,7 +13,7 @@
  * piece of personal information shown on the site.
  *
  * CHANGE: name, taglines, intro, about, education,
- *         techStack, skills, social links, image, etc.
+ *         stackGroups, skills, social links, image, etc.
  */
 const profileConfig = {
   // ---- Hero Section ----
@@ -34,9 +34,13 @@ const profileConfig = {
     { degree: "Software Engineer", school: "Sai Gon University", year: "2023 – 2028" },
   ],  // CHANGE: education entries
 
-  techStack: [
-      "Java", "C#", ".NET", "MySQL", "Git",
-  ],  // CHANGE: short list of technologies for the About card
+  stackGroups: [
+    { label: "Languages", items: ["Java", "C#"] },
+    { label: "Backend", items: ["Spring Boot", "ASP.NET"] },
+    { label: "Data", items: ["MySQL", "PostgreSQL", "Supabase"] },
+    { label: "Tooling", items: ["Git"] },
+    { label: "AI coding", items: ["OpenCode", "Claude Code"] },
+  ],  // CHANGE: tech stack, grouped by area
 
 
 
@@ -59,14 +63,32 @@ const profileConfig = {
  *   description – short summary
  *   tech        – array of technologies
  *   github      – GitHub repo URL
+ *   links       – optional array of { label, href } for several repos
  *   demo        – live demo URL  (set "" to hide)
  */
 const projects = [
   {
+    title: "Headless E-Commerce Platform",
+    description:
+      "Backend and frontend repos for a headless e-commerce platform. Spring Boot API for PIM, multi-variant catalog, carts, orders, GHTK/GHN touchless fulfillment, and VNPAY/MoMo/VietQR payments; Next.js storefront in progress.",
+    tech: ["Next.js", "TypeScript", "Spring Boot", "Spring Security", "PostgreSQL", "Supabase", "Redis", "RabbitMQ"],
+    links: [
+      { label: "Frontend", href: "https://github.com/thedan85/FE-DACN" },
+      { label: "Backend", href: "https://github.com/thedan85/DACN" },
+    ],
+  },
+  {
+    title: "HotJob",
+    description:
+      "A Blazor Server app for a job board and applicant tracking workflow. Includes VNPAY payment. EF Core Identity with JWT Bearer auth over MySQL: candidate registration, login and profile views are wired, with employer ATS pages and job search still in progress.",
+    tech: [".NET 10", "Blazor Server", "EF Core", "JWT", "MySQL", "VNPAY"],
+    github: "https://github.com/thedan85/HotJob",
+  },
+  {
     title: "InteractHub Social Network Platform",
     description:
       "A full-stack social network platform built with a React and TypeScript frontend and an ASP.NET Core Web API backend backed by MySQL. It includes authentication, posts, comments, likes, shares, profiles, friends, stories, notifications, hashtag search, admin tools, and real-time updates.",
-    tech: ["C#", ".NET", "React", "TypeScript", "MySQL", "SignalR"],
+    tech: ["C#", "ASP.NET", "React", "TypeScript", "MySQL", "SignalR"],
     github: "https://github.com/thedan85/Cs-SocialNetworkPlatform",
   },
   {
@@ -75,13 +97,6 @@ const projects = [
       "A web application that allows users to track the real-time location of buses, view routes, and receive notifications about bus arrivals and delays. The system includes a backend API built with Java and Spring Boot, a MySQL database for storing bus and route information, and a frontend interface developed using Next.js.",
     tech: ["Java", "MySQL","Spring Boot","Spring Security","Next.js"],
     github: "https://github.com/qwqntp/SSB",
-  },
-  {
-    title: "FunnyMart",
-    description:
-      "A PHP and MySQL supermarket management system with a role-based dashboard, inventory workflows, sales documents, reporting, and staff management. It uses a layered architecture with controllers, services, repositories, models, and view pages for authentication, permissions, product management, invoices, payroll, and reports.",
-    tech: ["PHP", "MySQL", "HTML", "CSS", "JavaScript"],
-    github: "https://github.com/qwqntp/web2",
   }
 ];
 
@@ -118,7 +133,8 @@ function renderPage() {
   $("#hero-name").textContent = profileConfig.name;
   $("#hero-role").textContent = profileConfig.taglines[0];
   $("#hero-intro").textContent = profileConfig.intro;
-  $("#hero-stack").textContent = profileConfig.techStack.join(" · ");
+  const backendGroup = profileConfig.stackGroups.find((g) => g.label === "Backend");
+  $("#hero-stack").textContent = (backendGroup ? backendGroup.items : []).join(" · ");
   $("#hero-school").textContent =
     profileConfig.education[0].school + " · " + profileConfig.education[0].year;
   $("#hero-email").href = "mailto:" + profileConfig.email;
@@ -146,13 +162,28 @@ function renderPage() {
     eduEl.appendChild(p);
   });
 
-  // About – tech stack badges
+  // About – tech stack, grouped by area
   const techEl = $("#about-tech");
-  profileConfig.techStack.forEach((t) => {
-    const span = document.createElement("span");
-    span.className = "tech-badge";
-    span.textContent = t;
-    techEl.appendChild(span);
+  profileConfig.stackGroups.forEach((group) => {
+    const wrap = document.createElement("div");
+    wrap.className = "stack-group";
+
+    const label = document.createElement("h4");
+    label.className = "stack-label";
+    label.textContent = group.label;
+
+    const list = document.createElement("div");
+    list.className = "tech-stack";
+    group.items.forEach((t) => {
+      const span = document.createElement("span");
+      span.className = "tech-badge";
+      span.textContent = t;
+      list.appendChild(span);
+    });
+
+    wrap.appendChild(label);
+    wrap.appendChild(list);
+    techEl.appendChild(wrap);
   });
 
   // Projects
@@ -166,19 +197,24 @@ function renderPage() {
       techHtml += "<span>" + escapeHtml(t) + "</span>";
     });
 
+    const links = [];
+    if (Array.isArray(proj.links)) {
+      proj.links.forEach((l) => {
+        if (l && l.href) links.push({ label: l.label || "Code", href: l.href });
+      });
+    }
+    if (proj.github) links.push({ label: "Code", href: proj.github });
+    if (proj.demo) links.push({ label: "Live", href: proj.demo });
+
     let linksHtml = "";
-    if (proj.github) {
+    links.forEach((l) => {
       linksHtml +=
         '<a href="' +
-        escapeAttr(proj.github) +
-        '" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">&#8599;</span></a>';
-    }
-    if (proj.demo) {
-      linksHtml +=
-        '<a href="' +
-        escapeAttr(proj.demo) +
-        '" target="_blank" rel="noopener noreferrer">Live <span aria-hidden="true">&#8599;</span></a>';
-    }
+        escapeAttr(l.href) +
+        '" target="_blank" rel="noopener noreferrer">' +
+        escapeHtml(l.label) +
+        ' <span aria-hidden="true">&#8599;</span></a>';
+    });
 
     card.innerHTML =
       '<span class="project-index" aria-hidden="true">' +
